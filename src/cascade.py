@@ -22,6 +22,9 @@ def run_cascade(G, seed_nodes, probability, seed):
     rng = random.Random(seed)
     time_step = 0
 
+    for node in seed_nodes:
+        G.nodes[node]["activated"] = True
+
     while newly_activated:
         next_newly_activated = set()
         for node in newly_activated:
@@ -29,6 +32,7 @@ def run_cascade(G, seed_nodes, probability, seed):
                 if child_node in activated:
                     continue
                 if rng.random() < probability:
+                    G.nodes[child_node]["activated"] = True
                     activated.add(child_node)
                     next_newly_activated.add(child_node)
         

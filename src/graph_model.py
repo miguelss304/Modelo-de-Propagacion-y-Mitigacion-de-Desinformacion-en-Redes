@@ -11,7 +11,7 @@ def generate_network(n_nodes, model, seed, max_attempts = 100):
         max_attemps: maximo de seguridad de intentos permitidos para generar un grafo conexo
 
     Returns:
-        DiGraph de networkx representando la red simulada.
+        DiGraph de networkx representando la red simulada. Cada nodo nace con el atributo "activated" = False.
 
     Raises:
         ValueError: Si `model` no es un valor soportado.
@@ -38,6 +38,8 @@ def generate_network(n_nodes, model, seed, max_attempts = 100):
             raise ValueError(f"Modelo no soportado: {model}")
 
         if nx.is_weakly_connected(G):
+            for node in G.nodes():
+                G.nodes[node]["activated"] = False
             return G
 
     raise RuntimeError(
