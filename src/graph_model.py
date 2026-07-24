@@ -1,14 +1,15 @@
 import random
 import networkx as nx
 
-def generate_network(n_nodes, model, seed, max_attempts = 100):
+def generate_network(n_nodes, model, seed, avg_degree = 4, max_attempts = 100):
     """Genera una red simulada como grafo dirigido.
 
     Args:
         n_nodes: Número de nodos (personas) en la red.
         model: Modelo de generación, "erdos_renyi" o "barabasi_albert".
         seed: Semilla para reproducibilidad.
-        max_attemps: maximo de seguridad de intentos permitidos para generar un grafo conexo
+        avg_degree: Numero promedio de conexiones por nodo.
+        max_attempts: maximo de seguridad de intentos permitidos para generar un grafo conexo
 
     Returns:
         DiGraph de networkx representando la red simulada. Cada nodo nace con el atributo "activated" = False.
@@ -20,10 +21,10 @@ def generate_network(n_nodes, model, seed, max_attempts = 100):
         current_seed = seed + attempt
 
         if model == "erdos_renyi":
-            p = 0.15
+            p = avg_degree / (2* (n_nodes - 1))
             G = nx.erdos_renyi_graph(n_nodes, p, seed=current_seed, directed=True)
         elif model == "barabasi_albert":
-            m = 2
+            m = max(1, round(avg_degree / 2))
             G_undirected = nx.barabasi_albert_graph(n_nodes, m, seed=current_seed)
             G = nx.DiGraph()
             G.add_nodes_from(G_undirected.nodes())
@@ -46,6 +47,34 @@ def generate_network(n_nodes, model, seed, max_attempts = 100):
         f"No se pudo generar un grafo conexo tras {max_attempts} intentos "
         f"con n_nodes={n_nodes}, model={model}"
     )
+
+def graph_summary(G):
+    """Calcula estadísticas descriptivas básicas del grafo.
+
+    Args:
+        G: Grafo de networkx (DiGraph).
+
+    Returns:
+        dict con:
+            "n_nodes": cantidad de nodos
+            "n_edges": cantidad de aristas
+            "density": densidad del grafo (0 a 1)
+            "avg_degree": grado promedio (in+out) por nodo
+            "is_weakly_connected": si el grafo es débilmente conexo
+    """
+    n_nodes = G.number_of_nodes()
+    n_edges = G.number_of_edges()
+    density = nx.density(G)
+    avg_degree = sum(dict(G.degree()).values()) / n_nodes
+    is_connected = nx.is_weakly_connected(G)
+
+    return {
+        "n_nodes": n_nodes,
+        "n_edges": n_edges,
+        "density": density,
+        "avg_degree": avg_degree,
+        "is_weakly_connected": is_connected,
+    }
 
 def save_graph(G, path):
     """Guarda un grafo en formato GML.
