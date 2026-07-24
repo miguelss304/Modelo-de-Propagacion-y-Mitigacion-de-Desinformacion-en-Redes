@@ -3,102 +3,127 @@ graph [
   node [
     id 0
     label "0"
+    activated 0
   ]
   node [
     id 1
     label "1"
+    activated 0
   ]
   node [
     id 2
     label "2"
+    activated 0
   ]
   node [
     id 3
     label "3"
+    activated 0
   ]
   node [
     id 4
     label "4"
+    activated 0
   ]
   node [
     id 5
     label "5"
+    activated 0
   ]
   node [
     id 6
     label "6"
+    activated 0
   ]
   node [
     id 7
     label "7"
+    activated 0
   ]
   node [
     id 8
     label "8"
+    activated 0
   ]
   node [
     id 9
     label "9"
+    activated 0
   ]
   node [
     id 10
     label "10"
+    activated 0
   ]
   node [
     id 11
     label "11"
+    activated 0
   ]
   node [
     id 12
     label "12"
+    activated 0
   ]
   node [
     id 13
     label "13"
+    activated 0
   ]
   node [
     id 14
     label "14"
+    activated 0
   ]
   node [
     id 15
     label "15"
+    activated 0
   ]
   node [
     id 16
     label "16"
+    activated 0
   ]
   node [
     id 17
     label "17"
+    activated 0
   ]
   node [
     id 18
     label "18"
+    activated 0
   ]
   node [
     id 19
     label "19"
+    activated 0
   ]
   node [
     id 20
     label "20"
+    activated 0
   ]
   node [
     id 21
     label "21"
+    activated 0
   ]
   node [
     id 22
     label "22"
+    activated 0
   ]
   node [
     id 23
     label "23"
+    activated 0
   ]
   node [
     id 24
     label "24"
+    activated 0
   ]
   edge [
     source 0
