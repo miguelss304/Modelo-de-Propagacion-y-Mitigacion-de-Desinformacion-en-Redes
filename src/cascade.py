@@ -1,11 +1,13 @@
 import random
 
 def run_cascade(G, seed_nodes, probability, seed):
+
     """
     Simula la expansion de la fake news a lo largo del grafo
 
     Args:
-        G: grafo generado con anterioridad
+        G: grafo generado con anterioridad. Se modifica in-place: cada nodo
+        activado queda marcado con el atributo "activated"=True.
         seed_nodes: nodos que empiezan activados
         probability: probabilidad de que un nodo se active
         seed: semilla para reproducibilidad
@@ -15,12 +17,18 @@ def run_cascade(G, seed_nodes, probability, seed):
         steps: cantidad de repeticiones hasta que no hubo nuevos nodos activos
         size: cantidad de nodos activos al final de la simulacion
 
+    Raises:
+        ValueError: si algún nodo en seed_nodes no existe en el grafo.
     """
 
     activated = set(seed_nodes)
     newly_activated = set(seed_nodes)
     rng = random.Random(seed)
     time_step = 0
+
+    for node in seed_nodes:
+        if node not in G.nodes():
+            raise ValueError(f"El nodo semilla '{node}' no existe en el grafo")
 
     for node in seed_nodes:
         G.nodes[node]["activated"] = True
