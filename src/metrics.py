@@ -6,6 +6,8 @@ mide qué tan bien funcionó una intervención ya aplicada, usando simulación
 Monte Carlo sobre el modelo de cascada (Independent Cascade Model).
 """
 
+import time
+
 from src.cascade import run_cascade
 from src.intervention import STRATEGIES
 
@@ -40,23 +42,27 @@ def average_cascade_size(G, seed_nodes, probability, n_simulations, seed):
             "avg_pct": porcentaje promedio de la red afectada
             "avg_steps": número promedio de pasos hasta estabilizar
             "sizes": lista con el tamaño de cada simulación individual
+            "runtime_sec": tiempo total (segundos) que tomaron las n_simulations
     """
     if not seed_nodes or G.number_of_nodes() == 0:
-        return {"avg_size": 0.0, "avg_pct": 0.0, "avg_steps": 0.0, "sizes": []}
+        return {"avg_size": 0.0, "avg_pct": 0.0, "avg_steps": 0.0, "sizes": [], "runtime_sec": 0.0}
 
+    inicio = time.perf_counter()
     sizes, steps_list = [], []
     for i in range(n_simulations):
         reset_activation(G)
         result = run_cascade(G, seed_nodes, probability, seed=seed + i)
         sizes.append(result["size"])
         steps_list.append(result["steps"])
+    runtime_sec = time.perf_counter() - inicio
 
     reset_activation(G)
     avg_size = sum(sizes) / len(sizes)
     avg_steps = sum(steps_list) / len(steps_list)
     avg_pct = avg_size / G.number_of_nodes() * 100
 
-    return {"avg_size": avg_size, "avg_pct": avg_pct, "avg_steps": avg_steps, "sizes": sizes}
+    return {"avg_size": avg_size, "avg_pct": avg_pct, "avg_steps": avg_steps, "sizes": sizes,
+            "runtime_sec": runtime_sec}
 
 
 def compare_strategies(G, seed_nodes, probability, n_remove, n_simulations=50, seed=0,
@@ -75,24 +81,30 @@ def compare_strategies(G, seed_nodes, probability, n_remove, n_simulations=50, s
 
     Returns:
         dict {nombre_estrategia: {"removed": [...], "avg_size": ..., "avg_pct": ...,
-              "avg_steps": ..., "graph": G_intervenido}}
+              "avg_steps": ..., "graph": G_intervenido, "runtime_sec": ...}}
+        "runtime_sec" es el tiempo total de la estrategia: elegir qué nodos
+        remover + correr las n_simulations de Monte Carlo sobre el resultado.
     """
     names = strategies or list(STRATEGIES.keys())
     results = {}
 
     for name in names:
+        inicio = time.perf_counter()
         fn = STRATEGIES[name]
         removed, G_intervened = fn(G, seed_nodes, n_remove, probability, seed)
         active_seeds = [s for s in seed_nodes if s in G_intervened]
         stats = average_cascade_size(
             G_intervened, active_seeds, probability, n_simulations, seed
         )
+        runtime_sec = time.perf_counter() - inicio
+
         results[name] = {
             "removed": removed,
             "avg_size": stats["avg_size"],
             "avg_pct": stats["avg_pct"],
             "avg_steps": stats["avg_steps"],
             "graph": G_intervened,
+            "runtime_sec": runtime_sec,
         }
 
     return results

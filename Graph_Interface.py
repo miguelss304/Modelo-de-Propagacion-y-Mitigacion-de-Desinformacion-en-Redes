@@ -142,23 +142,55 @@ def mostrar_dashboard(G, seed_nodes, probability, n_remove, n_simulations,
         ax_curve.set_ylabel("# activados")
 
         nombres = list(resultados.keys())
-        valores = [resultados[n]["avg_size"] for n in nombres]
+        valores_pct = [resultados[n]["avg_pct"] for n in nombres]
+        pct_baseline = resultados["baseline"]["avg_pct"]
         colores_barras = [COLORES_ESTRATEGIA.get(n, "#6c757d") for n in nombres]
-        barras = ax_bar.bar(nombres, valores, color=colores_barras, zorder=3,
+        barras = ax_bar.bar(nombres, valores_pct, color=colores_barras, zorder=3,
                              edgecolor="white", linewidth=1.2)
-        for barra, valor in zip(barras, valores):
-            ax_bar.text(barra.get_x() + barra.get_width() / 2, valor + max(valores) * 0.02,
-                        f"{valor:.1f}", ha="center", va="bottom", fontsize=9)
-        ax_bar.set_ylim(0, max(valores) * 1.18)
-        ax_bar.set_title(f"Tamaño promedio de cascada por estrategia\n"
+        for barra, valor, nombre in zip(barras, valores_pct, nombres):
+            etiqueta = f"{valor:.1f}%"
+            if nombre != "baseline" and pct_baseline > 0:
+                reduccion = (pct_baseline - valor) / pct_baseline * 100
+                etiqueta += f"\n(-{reduccion:.0f}%)"
+            ax_bar.text(barra.get_x() + barra.get_width() / 2, valor + max(valores_pct) * 0.02,
+                        etiqueta, ha="center", va="bottom", fontsize=8.5)
+        ax_bar.set_ylim(0, max(valores_pct) * 1.28)
+        ax_bar.set_title(f"% de la red afectada por estrategia\n"
                          f"(n_remove={n_remove}, {n_simulations} simulaciones Monte Carlo)",
                          fontsize=11, pad=10)
-        ax_bar.set_ylabel("# nodos activados (promedio)")
+        ax_bar.set_ylabel("% de nodos activados (promedio)")
         ax_bar.tick_params(axis="x", rotation=15)
 
         fig_resultados.tight_layout(rect=[0, 0, 1, 0.93])
 
     anim_resultados = FuncAnimation(fig_resultados, dibujar_frame_resultados, frames=max_len,
                                     interval=velocidad_animacion_ms, repeat=True)
+
+    # --- ventana 3: tiempo de ejecucion por estrategia -----------------------
+
+    fig_tiempo, ax_tiempo = plt.subplots(figsize=(7.5, 5))
+    fig_tiempo.suptitle(f"Tiempo de ejecucion por estrategia  (seed={seed})",
+                         fontsize=14, fontweight="bold")
+    fig_tiempo.patch.set_facecolor("#fafafa")
+    ax_tiempo.set_facecolor("#fafafa")
+    ax_tiempo.spines["top"].set_visible(False)
+    ax_tiempo.spines["right"].set_visible(False)
+    ax_tiempo.grid(axis="y", color="#dee2e6", linewidth=0.8, zorder=0)
+    ax_tiempo.set_axisbelow(True)
+
+    nombres = list(resultados.keys())
+    tiempos = [resultados[n]["runtime_sec"] for n in nombres]
+    colores_barras = [COLORES_ESTRATEGIA.get(n, "#6c757d") for n in nombres]
+    barras_tiempo = ax_tiempo.bar(nombres, tiempos, color=colores_barras, zorder=3,
+                                   edgecolor="white", linewidth=1.2)
+    for barra, valor in zip(barras_tiempo, tiempos):
+        ax_tiempo.text(barra.get_x() + barra.get_width() / 2, valor + max(tiempos) * 0.02,
+                        f"{valor:.2f}s", ha="center", va="bottom", fontsize=9)
+    ax_tiempo.set_ylim(0, max(tiempos) * 1.18)
+    ax_tiempo.set_title(f"Incluye seleccion de nodos + {n_simulations} simulaciones Monte Carlo",
+                         fontsize=10, pad=10)
+    ax_tiempo.set_ylabel("segundos")
+    ax_tiempo.tick_params(axis="x", rotation=15)
+    fig_tiempo.tight_layout(rect=[0, 0, 1, 0.90])
 
     plt.show()
