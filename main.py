@@ -127,7 +127,7 @@ def main():
         print(f"  nodos removidos: {r['removed']}")
         print(f"  tamaño promedio de cascada: {r['avg_size']:.2f} nodos ({r['avg_pct']:.1f}%)")
         print(f"  pasos promedio: {r['avg_steps']:.2f}")
-        print(f"  tiempo promedio de ejecicion : {r['runtime_sec']:.2f}")
+        print(f"  tiempo de ejecución: {r['runtime_sec']:.3f} s")
 
     # 4. Guardar el grafo como respaldo para la entrega
     save_graph(G, "data/example_graph.gml")
