@@ -16,13 +16,13 @@ from Graph_Interface import mostrar_dashboard
 # Parámetros por defecto del experimento
 # ---------------------------------------------------------------------------
 
-N_NODES = 60
+N_NODES = 100
 MODEL = "barabasi_albert"          # "erdos_renyi" o "barabasi_albert"
 AVG_DEGREE = 4
 
-N_SEEDS = 2                     # cuántos nodos originan la fake news (top-N por out-degree)
+N_SEEDS = 3                     # cuántos nodos originan la fake news (top-N por out-degree)
 PROBABILITY = 0.25
-N_REMOVE = 9                     # nodos removidos por cada estrategia
+N_REMOVE = 10                     # nodos removidos por cada estrategia
 N_SIMULATIONS = 100               # simulaciones Monte Carlo para comparar estrategias
 
 ESTRATEGIA_A_ANIMAR = "greedy"    # cuál estrategia se anima junto al baseline
@@ -127,9 +127,14 @@ def main():
         print(f"  nodos removidos: {r['removed']}")
         print(f"  tamaño promedio de cascada: {r['avg_size']:.2f} nodos ({r['avg_pct']:.1f}%)")
         print(f"  pasos promedio: {r['avg_steps']:.2f}")
+        print(f"  tiempo promedio de ejecicion : {r['runtime_sec']:.2f}")
 
     # 4. Guardar el grafo como respaldo para la entrega
     save_graph(G, "data/example_graph.gml")
+
+    if params["n_nodes"] > 300:
+        print("Se omite la visualización debido a rendimiento")
+        return
 
     # 5. Mostrar el dashboard visual
     mostrar_dashboard(
