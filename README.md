@@ -126,11 +126,12 @@ COMPARACIÓN DE ESTRATEGIAS DE INTERVENCIÓN
   nodos removidos: [7, 0, 3, 11, 23, 43, 8, 20, 33, 37]
   tamaño promedio de cascada: 7.34 nodos (8.2%)
   pasos promedio: 2.58
-  tiempo promedio de ejecucion : 1.27```
+  tiempo promedio de ejecucion : 1.27
+  ```
 
 ## Estructura del repositorio
 
-```
+```bash
 .
 ├── main.py                # Orquestador: genera la red, corre el experimento, muestra el dashboard
 ├── Graph_Interface.py     # Dashboard de visualización
