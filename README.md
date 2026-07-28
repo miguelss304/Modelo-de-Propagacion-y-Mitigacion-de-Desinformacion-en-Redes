@@ -42,8 +42,39 @@ Docente: Jhoan Sebastián Tenjo García
 ```bash
 git clone https://github.com/miguelss304/Modelo-de-Propagacion-y-Mitigacion-de-Desinformacion-en-Redes.git
 cd Modelo-de-Propagacion-y-Mitigacion-de-Desinformacion-en-Redes
+
 python -m venv venv
-source venv/Scripts/activate   # Git Bash en Windows; Mac/Linux: source venv/bin/activate
+```
+
+Activar el entorno virtual:
+
+**Windows (PowerShell)**
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+**Windows (CMD)**
+
+```cmd
+venv\Scripts\activate.bat
+```
+
+**Git Bash**
+
+```bash
+source venv/Scripts/activate
+```
+
+**Linux / macOS**
+
+```bash
+source venv/bin/activate
+```
+
+Instalar dependencias:
+
+```bash
 pip install -r requirements.txt
 ```
 
@@ -147,11 +178,11 @@ COMPARACIÓN DE ESTRATEGIAS DE INTERVENCIÓN
 
 ## Nota sobre el uso de IA
 
-Durante el desarrollo de este trabajo se utilizó inteligencia artificial (Claude, de Anthropic) como herramienta de apoyo en distintas etapas del proyecto, dado que Python no es un lenguaje con el que el equipo tenga experiencia previa consolidada.
+Durante el desarrollo de este trabajo se utilizó inteligencia artificial (Claude, de Anthropic) como herramienta de apoyo en distintas etapas del proyecto.
 
 El uso se concentró en las siguientes áreas:
 
-- **Implementación en Python:** apoyo con sintaxis del lenguaje, manejo de estructuras de datos, uso de las librerías `networkx`,`matplotlib` , y depuración de errores en el código.
+- **Implementación en Python:** apoyo con sintaxis del lenguaje, manejo de estructuras de datos, uso de las librerías `networkx`,`matplotlib`, y depuración de errores en el código.
 - **Generación de visualizaciones:** creación de las gráficas a partir de los datos numéricos producidos por las simulaciones del equipo.
 - **Redacción y formato:** apoyo en la redacción de tablas, discusión de resultados y conclusiones del informe, a partir del análisis y las decisiones tomadas por los integrantes del equipo.
 
